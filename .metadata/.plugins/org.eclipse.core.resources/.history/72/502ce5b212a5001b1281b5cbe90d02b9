@@ -1,0 +1,98 @@
+package com.example.demo.service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.demo.model.userForm;
+import com.example.demo.reposiory.userDao;
+
+@Service
+@Transactional
+public class userService {
+
+	@Autowired
+	userDao userDao;
+
+	public List<Map<String, Object>> selectAll() {
+
+		List<Map<String, Object>> list = userDao.selectAll();
+		return list;
+
+	}
+
+	// ユーザー登録
+	public int registUser(userForm userForm) {
+
+		// 初期値としてdeleteFlgに0を設定する
+		userForm.setDeleteFlg("0");
+
+		// userIdを発行する
+		String userId = "";
+		if (userForm.getUserKbn().equals("admin")) {
+			userId = "ADM";
+		} else {
+			userId = "USR";
+		}
+
+		// 0～9の乱数5桁を生成
+		Random rand = new Random();
+		String userIdNum = "";
+		for (int i = 0; i < 5; i++) {
+			int randNum = rand.nextInt(10);
+			userIdNum = userIdNum + String.valueOf(randNum);
+		}
+
+		// 3(ユーザー区分)+5(数値)桁のユーザーIDを生成
+		userForm.setUserId(userId + userIdNum);
+
+		int user = userDao.registUser(userForm);
+		return user;
+
+	}
+
+	// ユーザー更新
+	public int updateUser(userForm userForm) {
+
+		int user = userDao.updateUser(userForm);
+		return user;
+
+	}
+
+	// ユーザー選択(ID検索)
+	public userForm selectUser(String userId) {
+
+		Map<String, Object> user = userDao.selectUser(userId);
+
+		userForm userForm = new userForm();
+		userForm.setUserId(String.valueOf(user.get("userId")));
+		userForm.setUserName(String.valueOf(user.get("userName")));
+		userForm.setPassword(String.valueOf(user.get("password")));
+		userForm.setUserKbn(String.valueOf(user.get("userKbn")));
+		userForm.setDeleteFlg(String.valueOf(user.get("deleteFlg")));
+
+		return userForm;
+
+	}
+
+	// ユーザー論理削除(deleteFlg=1)
+	public int updateDeleteFlg(int deleteFlg) {
+
+		int user = userDao.updateDeletFlg(deleteFlg);
+		return user;
+
+	}
+
+	// ユーザー削除
+	public int deleteUser(String[] userId) {
+
+		int user = userDao.deleteUser(userId);
+		return user;
+
+	}
+
+}

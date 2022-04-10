@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>稼働管理システム</title>
+<!-- Bootstrap Popper -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<!-- JQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+<div class="container-lg">
+	<!-- header start -->
+	<nav class="navbar navbar-dark bg-primary mt-3 mb-3">
+	<p class="navbar-brand px-3">稼働管理システム</p>
+	</nav>
+	<!-- header end -->
+
+	<!-- form start -->
+	<div class="container mt-3 mb-3 border border-secondary border-2 rounded">
+	<form action="/work/register" method="post" th:object="${workForm}">
+		<div class="text-danger mb-1" th:errors="*{registDate}"></div>
+		<div class="text-danger mb-1" th:errors="*{startTime}"></div>
+      	<div class="text-danger mb-1" th:errors="*{endTime}"></div>
+      	<div class="text-danger mb-1" th:errors="*{workKbn}"></div>
+
+	<div class="form-group row py-3">
+		<div class="col-2">
+			<label for="registDate" class="form-label">日付</label>
+			<input type="date" name="registDate" id="registDate" th:value="*{registDate}" onchange="changeDate()">
+		</div>
+
+		<div class="col-1">
+			<label for="startTime" class="form-label">開始時間</label><br>
+        	<input type="time" name="startTime" th:value="*{startTime}">
+    	</div>
+
+		<div class="col-1">
+			<label for="endTime" class="form-label">終了時間</label><br>
+        	<input type="time" name="endTime" th:value="*{endTime}">
+    	</div>
+	</div>
+
+	<div class="form-group row py-3">
+		<div class="col-2 mb-3">
+			<label for="workKbn" class="form-label">作業区分</label>
+			<select name="workKbn" class="form-select">
+				<option value="1" th:selected="*{workKbn == '1'}">要件定義</option>
+				<option value="2" th:selected="*{workKbn == '2'}">基本設計</option>
+				<option value="3" th:selected="*{workKbn == '3'}">詳細設計</option>
+				<option value="4" th:selected="*{workKbn == '4'}">製造</option>
+				<option value="5" th:selected="*{workKbn == '5'}">テスト</option>
+				<option value="6" th:selected="*{workKbn == '6'}">公開作業</option>
+				<option value="7" th:selected="*{workKbn == '7'}">レビュー</option>
+				<option value="8" th:selected="*{workKbn == '8'}">会議</option>
+				<option value="9" th:selected="*{workKbn == '9'}">見積もり</option>
+				<option value="10" th:selected="*{workKbn == '10'}">調査</option>
+				<option value="11" th:selected="*{workKbn == '11'}">その他</option>
+			</select>
+		</div>
+
+		<div class="col-5 mb-3">
+			<label for="workDetail" class="form-label">作業内容</label>
+			<input type="text" class="form-control" name="workDetail" th:value="*{workDetail}">
+		</div>
+
+		<div class="col-5 mb-3">
+			<label for="other" class="form-label">備考</label>
+			<input type="text" class="form-control" name="other" th:value="*{other}">
+		</div>
+	</div>
+
+		<input type="hidden" name="workId" th:value="*{workId}">
+		<input class="btn btn-primary w-20 mb-3" type="submit" value="登録">
+
+	</form>
+	</div>
+	<!-- form end -->
+
+	<!-- result table start -->
+	<table class="table table-striped table-bordered table-hover" id="resultTable">
+		<thead>
+		<tr>
+			<th style="width:10%">開始時間</th>
+			<th style="width:10%">終了時間</th>
+			<th style="width:10%">作業区分</th>
+			<th style="width:30%">作業内容</th>
+			<th style="width:30%">備考</th>
+			<th style="width:5%">編集</th>
+			<th style="width:5%">削除</th>
+		</tr>
+		</thead>
+
+		<tbody>
+		<tr th:each="item:${list}">
+			<td th:text="${item.startTime}"></td>
+			<td th:text="${item.endTime}"></td>
+			<td th:text="${item.workKbn}"></td>
+			<td th:text="${item.workDetail}"></td>
+			<td th:text="${item.other}"></td>
+			<td><button type="button" id="editBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" th:data-id="${item.workId}">編集</button></td>
+			<td><button type="button" id="deleteBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" th:data-id="${item.workId}">削除</button></td>
+		</tr>
+		</tbody>
+	</table>
+	<!-- result end -->
+</div>
+
+<!-- edit mordal start -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">稼働時間編集</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        	<div class="form-group row py-3">
+        		<div class="col-3">
+					<label for="registDate" class="form-label">日付</label>
+					<input type="date" name="registDate" id="registDate" class="registDate">
+				</div>
+
+				<div class="col-2">
+					<label for="startTime" class="form-label">開始時間</label><br>
+        			<input type="time" name="startTime" class="startTime">
+    			</div>
+
+				<div class="col-2">
+					<label for="endTime" class="form-label">終了時間</label><br>
+        			<input type="time" name="endTime" class="endTime">
+    			</div>
+
+				<div class="col-3">
+					<label for="workKbn" class="form-label">作業区分</label>
+					<select name="workKbn" class="workKbn form-select">
+						<option value="1">要件定義</option>
+						<option value="2">基本設計</option>
+						<option value="3">詳細設計</option>
+						<option value="4">製造</option>
+						<option value="5">テスト</option>
+						<option value="6">公開作業</option>
+						<option value="7">レビュー</option>
+						<option value="8">会議</option>
+						<option value="9">見積もり</option>
+						<option value="10">調査</option>
+						<option value="11">その他</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group row py-3 mx-1">
+				<label for="workDetail" class="col-form-label">作業内容</label>
+				<input type="text" name="workDetail" class="workDetail">
+			</div>
+
+			<div class="form-group row py-3 mx-1">
+				<label for="other" class="col-form-label">備考</label>
+				<input type="text" name="other" class="other">
+			</div>
+
+			<div class="modal-footer">
+        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeBtn()">閉じる</button>
+        		<button type="button" class="btn btn-primary" onclick="updateWork()">更新</button>
+        	</div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- edit mordal end -->
+
+<!-- delete mordal start -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">稼働時間削除</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      	<p>以下の登録内容を削除します。よろしいですか？</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"　onclick="closeBtn()">閉じる</button>
+        <button type="button" class="btn btn-primary" onclick="deleteWork()">削除</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- delete mordal end -->
+
+<script type="text/javascript">
+// 本日の日付を設定
+window.onload = function () {
+	//今日の日時を表示
+	var date = new Date();
+	var year = date.getFullYear();
+	var month = date.getMonth() + 1;
+	var day = date.getDate();
+
+	var toTwoDigits = function (num, digit) {
+ 		num += '';
+ 		if (num.length < digit) {
+			num = '0' + num;
+		}
+		return num;
+	}
+
+	var yyyy = toTwoDigits(year, 4);
+	var mm = toTwoDigits(month, 2);
+	var dd = toTwoDigits(day, 2);
+	var ymd = yyyy + "-" + mm + "-" + dd;
+
+	document.getElementById("registDate").value = ymd;
+}
+
+// 日付入力項目の値が変更されたら表示データを更新
+var changeDate = function() {
+	event.preventDefault();
+	var date = document.getElementById("registDate").value;
+
+	// Ajaxでコントローラーを呼び出す
+	$.ajax({
+        type : "GET",
+        url : "/work/date?date=" + date,
+        dataType: "text",
+        success : function(data,status,xhr) {
+        	// 表示していたデータを削除
+        	$('#resultTable tr:not(:eq(0))').remove();
+
+        	var dataList = JSON.parse(data);
+        	var appendHTML = "";
+
+        	// 1件づつ取得した指定日の勤務時間をテーブルに追加
+        	for(var i = 0; i < dataList.length; i++){
+
+        		appendHTML = $("<tr>");
+        		appendHTML.append($("<td></td>").text(dataList[i].startTime));
+        		appendHTML.append($("<td></td>").text(dataList[i].endTime));
+        		appendHTML.append($("<td></td>").text(translateWorkKbn(dataList[i].workKbn)));
+        		appendHTML.append($("<td></td>").text(dataList[i].workDetail));
+        		appendHTML.append($("<td></td>").text(dataList[i].other));
+        		appendHTML.append($("<td></td>").html('<button type="button" id="editBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" data-id=' + dataList[i].workId + '>編集</button>'));
+        		appendHTML.append($("<td></td>").html('<button type="button" id="deleteBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id=' + dataList[i].workId + '>削除</button>'));
+        		appendHTML.append($("</tr>"));
+
+        		$('#resultTable tbody').append(appendHTML);
+
+        	}
+         },
+         error : function(XMLHttpRequest, textStatus, errorThrown) {
+        	$('#resultTable').p("エラーが発生しました");
+         }
+	});
+}
+
+// 編集ボタン押下
+$(document).on("click", "#editBtn", function(e) {
+	// クリックした行の「編集ボタン」からIDを取得
+	var workId = $(e.currentTarget).data('id');
+
+	// 変更用にIDをセッションストレージに保存する
+	sessionStorage.setItem('id', workId);
+
+	$.ajax({
+        type : "GET",
+        url : "/work/id?id=" + workId,
+        dataType: "text",
+        success : function(data,status,xhr) {
+
+			var data = JSON.parse(data);
+
+			// 編集モーダル画面に取得した値をセット
+			$('#editModal .registDate').val(data.registDate);
+			$('#editModal .startTime').val(data.startTime);
+			$('#editModal .endTime').val(data.endTime);
+			$('#editModal .workKbn').val(data.workKbn);
+			$('#editModal .workDetail').val(data.workDetail);
+			$('#editModal .other').val(data.other);
+
+       },
+       error : function(XMLHttpRequest, textStatus, errorThrown) {
+    	   $('#resultTable').p("エラーが発生しました");
+       }
+	});
+});
+
+// 更新ボタン押下
+var updateWork = function() {
+	// 編集画面で変更した項目の値をJSONに変換
+	var jsonData = {
+		workId: sessionStorage.getItem('id'),
+		startTime: $('.startTime').val(),
+		endTime: $('.endTime').val(),
+		workKbn: $('.workKbn').val(),
+		workDetail: $('.workDetail').val(),
+		other: $('.other').val(),
+		registDate: $('.registDate').val()
+	};
+
+	$.ajax({
+		type: "POST",
+		url: "/work/update",
+	    contentType: "application/json",
+	    data: JSON.stringify(jsonData),
+	    dataType: "json",
+        success : function(data,status,xhr) {
+		   console.log("OK");
+       },
+       error : function(XMLHttpRequest, textStatus, errorThrown) {
+		   console.log("エラーが発生しました" + XMLHttpRequest + textStatus + errorThrown);
+       }
+	});
+}
+
+// 閉じるボタン押下
+var closeBtn = function() {
+	// 画面更新
+	location.reload();
+}
+
+// 削除ボタン押下
+var deleteWork = function() {
+	// クリックした行の「編集ボタン」からIDを取得
+	var workId = $(e.currentTarget).data('id');
+
+	// 削除用にIDをセッションストレージに保存する
+	sessionStorage.setItem('id', workId);
+
+	// 削除画面で変更した項目の値をJSONに変換
+	var jsonData = {
+		workId: sessionStorage.getItem('id')
+	};
+}
+
+// 作業区分変換
+var translateWorkKbn = function(kbnNum) {
+
+	var workKbn = "";
+
+	if(kbnNum == '1'){
+		workKbn = "要件定義";
+	}else if(kbnNum == '2'){
+		workKbn = "基本設計";
+	}else if(kbnNum == '3'){
+		workKbn = "詳細設計";
+	}else if(kbnNum == '4'){
+		workKbn = "製造";
+	}else if(kbnNum == '5'){
+		workKbn = "テスト";
+	}else if(kbnNum == '6'){
+		workKbn = "公開作業";
+	}else if(kbnNum == '7'){
+		workKbn = "レビュー";
+	}else if(kbnNum == '8'){
+		workKbn = "会議";
+	}else if(kbnNum == '9'){
+		workKbn = "見積もり";
+	}else if(kbnNum == '10'){
+		workKbn = "調査";
+	}else {
+		workKbn = "その他";
+	}
+
+	return workKbn;
+
+}
+</script>
+</body>
+</html>

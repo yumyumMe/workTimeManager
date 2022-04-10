@@ -1,0 +1,13 @@
+package com.example.demo.model;
+
+import java.sql.Timestamp;
+import java.util.Date;
+
+public class workModel {
+
+	// 今日の日付取得
+	Date date = new Date();
+	long time = date.getTime();
+	Timestamp today = new Timestamp(time);
+
+}

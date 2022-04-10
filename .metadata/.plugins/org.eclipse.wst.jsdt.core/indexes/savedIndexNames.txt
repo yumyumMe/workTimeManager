@@ -1,0 +1,1 @@
+INDEX VERSION 1.4+C:\Program Files (x86)\pleiades\workspace\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes

@@ -1,0 +1,6 @@
+package com.example.demo.reposiory;
+
+@Repositry
+public class workTimeDao {
+
+}

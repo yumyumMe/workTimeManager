@@ -1,0 +1,31 @@
+package com.example.demo.service;
+
+import java.sql.Timestamp;
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.model.workForm;
+import com.example.demo.reposiory.workTimeDao;
+
+@Service
+public class workTimeService {
+
+	@Autowired
+	workTimeDao workTimeDao;
+
+	// 勤務時間登録
+	public int registWorkTime(workForm workForm) {
+
+		// 登録時の日付をworkFormに持たせる
+		Date date = new Date();
+		long time = date.getTime();
+		Timestamp today = new Timestamp(time);
+
+		int result = workTimeDao.registWorkTime(workForm);
+		return result;
+
+	}
+
+}

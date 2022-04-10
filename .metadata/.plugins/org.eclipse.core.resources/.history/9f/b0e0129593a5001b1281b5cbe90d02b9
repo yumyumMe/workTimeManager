@@ -1,0 +1,21 @@
+package com.example.demo.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.model.workForm;
+import com.example.demo.reposiory.workTimeDao;
+
+@Service
+public class workTimeService {
+
+	@Autowired
+	workTimeDao workTimeDao;
+
+	public int registWorkTime(workForm workForm) {
+
+		int result = workTimeDao.registWorkTime(workForm);
+
+	}
+
+}

@@ -1,0 +1,35 @@
+package com.example.demo.service;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.demo.model.userForm;
+import com.example.demo.reposiory.userDao;
+
+@Service
+public class loginService {
+
+	@Autowired
+	userDao userDao;
+
+	@Override
+	@Transactional(readOnly = true)
+	public selectUser loadUserByUsername(String userName){
+
+		Map<String, Object> user = userDao.selectUser(userName);
+
+		userForm userForm = new userForm();
+		userForm.setUserId(String.valueOf(user.get("userId")));
+		userForm.setUserName(String.valueOf(user.get("userName")));
+		userForm.setPassword(String.valueOf(user.get("password")));
+		userForm.setUserKbn(String.valueOf(user.get("userKbn")));
+		userForm.setDeleteFlg(String.valueOf(user.get("deleteFlg")));
+
+		return userForm;
+
+	}
+
+}

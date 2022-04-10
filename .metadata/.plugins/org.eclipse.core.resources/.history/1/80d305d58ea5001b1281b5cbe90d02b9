@@ -1,0 +1,17 @@
+package com.example.demo.model;
+
+import java.util.Date;
+
+public class workForm {
+
+	public Date startTime;
+
+	public Date endTime;
+
+	public String workKbn;
+
+	public String workDetail;
+
+	public String other;
+
+}

@@ -1,0 +1,64 @@
+package com.example.demo.model;
+
+import java.sql.Timestamp;
+
+import javax.validation.constraints.NotBlank;
+
+public class workForm {
+
+	@NotBlank(message="※開始時間を入力してください")
+	public String startTime;
+
+	@NotBlank(message="※終了時間を入力してください")
+	public String endTime;
+
+	@NotBlank(message="作業区分を選択してください")
+	public String workKbn;
+
+	public String workDetail;
+
+	public String other;
+
+	public Timestamp registDate;
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getWorkKbn() {
+		return workKbn;
+	}
+
+	public void setWorkKbn(String workKbn) {
+		this.workKbn = workKbn;
+	}
+
+	public String getWorkDetail() {
+		return workDetail;
+	}
+
+	public void setWorkDetail(String workDetail) {
+		this.workDetail = workDetail;
+	}
+
+	public String getOther() {
+		return other;
+	}
+
+	public void setOther(String other) {
+		this.other = other;
+	}
+
+}

@@ -1,0 +1,30 @@
+package com.example.demo.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.example.demo.model.workForm;
+
+@Controller
+@RequestMapping("/work")
+public class workTimeManagerController {
+
+	@GetMapping("/index")
+	public String showIndex() {
+
+		return "/app/index";
+
+	}
+
+	@PostMapping("/register")
+	public String registWorkTime(@Validated @ModelAttribute workForm workForm) {
+
+		return "";
+
+	}
+
+}

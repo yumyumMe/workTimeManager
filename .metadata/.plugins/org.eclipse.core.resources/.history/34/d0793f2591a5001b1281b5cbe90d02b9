@@ -1,0 +1,11 @@
+package com.example.demo.reposiory;
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class workTimeDao {
+
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+
+}
