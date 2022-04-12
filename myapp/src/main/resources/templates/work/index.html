@@ -117,7 +117,6 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">稼働時間編集</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         	<div class="form-group row py-3">
@@ -180,13 +179,12 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">稼働時間削除</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
       	<p>以下の登録内容を削除します。よろしいですか？</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"　onclick="closeBtn()">閉じる</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeBtn()">閉じる</button>
         <button type="button" class="btn btn-primary" onclick="deleteWork()">削除</button>
       </div>
     </div>
@@ -313,28 +311,36 @@ var updateWork = function() {
 		   console.log("OK");
        },
        error : function(XMLHttpRequest, textStatus, errorThrown) {
-		   console.log("エラーが発生しました" + XMLHttpRequest + textStatus + errorThrown);
+		   console.log("エラーだよ！" + XMLHttpRequest + textStatus + errorThrown);
        }
 	});
-}
 
-// 閉じるボタン押下
-var closeBtn = function() {
-	// 画面更新
+	$('#editModal').modal('hide');
 	location.reload();
 }
 
 // 削除ボタン押下
-var deleteWork = function() {
+$(document).on("click", "#deleteBtn", function(e) {
 	// クリックした行の「編集ボタン」からIDを取得
 	var workId = $(e.currentTarget).data('id');
+
+	// 削除用にIDをセッションストレージに保存する
+	sessionStorage.setItem('id', workId);
+
+});
+
+//削除完了ボタン押下
+var deleteWork = function() {
+
+	// 削除確認画面で保存したIDを取得
+	var workId = sessionStorage.getItem('id');
 
 	$.ajax({
 		type: "POST",
 		url: "/work/delete",
 	    contentType: "application/json",
 	    data: workId,
-	    dataType: "text",
+	    dataType: "json",
         success : function(data,status,xhr) {
 		   console.log("OK");
        },
@@ -342,6 +348,10 @@ var deleteWork = function() {
 		   console.log("エラーが発生しました" + XMLHttpRequest + textStatus + errorThrown);
        }
 	});
+
+	$('#deleteModal').modal('hide');
+	location.reload();
+
 }
 
 // 作業区分変換

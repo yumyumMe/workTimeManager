@@ -1,14 +1,16 @@
 package com.example.demo.model;
 
-import java.time.LocalTime;
+import javax.validation.constraints.NotBlank;
 
 public class workForm {
 
 	public int workId;
 
-	public LocalTime startTime;
+	@NotBlank(message="※開始時間を入力してください")
+	public String startTime;
 
-	public LocalTime endTime;
+	@NotBlank(message="※終了時間を入力してください")
+	public String endTime;
 
 	public int workKbn;
 
@@ -26,19 +28,19 @@ public class workForm {
 		this.workId = workId;
 	}
 
-	public LocalTime getStartTime() {
+	public String getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(LocalTime startTime) {
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 
-	public LocalTime getEndTime() {
+	public String getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(LocalTime endTime) {
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 

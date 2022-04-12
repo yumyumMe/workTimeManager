@@ -18,7 +18,7 @@ public class workTimeDao {
 	// 勤務時間表示(引数： 日付)
 	public List<Map<String, Object>> showWorkTime(String day) {
 
-		String sql = "SELECT workId, DATE_FORMAT(startTime, '%H:%i')AS startTime, DATE_FORMAT(endTime, '%H:%i')AS endTime, workKbn, workDetail, other "
+		String sql = "SELECT workId, startTime, endTime, workKbn, workDetail, other "
 					 + "FROM workTime WHERE registDate = ?"
 					 + "ORDER BY startTime";
 		Object[] param = {day};
@@ -31,7 +31,7 @@ public class workTimeDao {
 	// 勤務時間表示(引数： 作業ID)
 	public Map<String, Object> showIdWork(String id) {
 
-		String sql = "SELECT DATE_FORMAT(startTime, '%H:%i')AS startTime, DATE_FORMAT(endTime, '%H:%i')AS endTime, workKbn, workDetail, other, registDate "
+		String sql = "SELECT startTime, endTime, workKbn, workDetail, other, registDate "
 					 + "FROM workTime WHERE workId = ?";
 		Object[] param = {id};
 		Map<String, Object> list = jdbcTemplate.queryForMap(sql, param);
@@ -65,7 +65,7 @@ public class workTimeDao {
 	// 勤務時間削除
 	public int deleteWorkTime(int workId) {
 
-		String sql = "DELETE * FROM workTime WHERE workId = ?";
+		String sql = "DELETE FROM workTime WHERE workId = ?";
 		Object[] param = {workId};
 
 		int result = jdbcTemplate.update(sql, param);

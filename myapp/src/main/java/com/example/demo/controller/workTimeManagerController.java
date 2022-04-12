@@ -6,18 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -127,16 +126,20 @@ public class workTimeManagerController {
 
 	// 勤務時間登録
 	@PostMapping("/register")
-	public String registWorkTime(@Validated @ModelAttribute workForm workForm,
-			BindingResult bindingResult, Model model, RedirectAttributes attr) {
+	public String registWorkTime(@Valid @ModelAttribute workForm workForm,
+			BindingResult bindingResult, RedirectAttributes attr) {
 
 		if(bindingResult.hasErrors()) {
+
 			return "/work/index";
+
+		}else {
+
+			workTimeService.registWorkTime(workForm);
+
+			return "redirect:/work/index";
+
 		}
-
-		workTimeService.registWorkTime(workForm);
-
-		return "redirect:/work/index";
 
 	}
 
@@ -152,8 +155,9 @@ public class workTimeManagerController {
 	}
 
 	// 勤務時間削除
-	@GetMapping("/delete")
-	public String deleteWorkTime(@RequestParam("workId") int workId, RedirectAttributes attr) {
+	@PostMapping("/delete")
+	@ResponseBody
+	public String deleteWorkTime(@RequestBody int workId, RedirectAttributes attr) {
 
 		workTimeService.deleteWorkTime(workId);
 
