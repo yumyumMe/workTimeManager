@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.model.userForm;
+import com.example.demo.model.UserForm;
 
 @Repository
-public class userDao {
+public class UserDao {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
@@ -26,7 +26,7 @@ public class userDao {
 	}
 
 	// ユーザー登録
-	public int registUser(userForm userForm) {
+	public int registUser(UserForm userForm) {
 
 		String sql = "INSERT INTO user (userId, userName, password, userKbn, deleteFlg) VALUES(?, ?, ?, ?, ?)";
 		Object[] param = {userForm.getUserId(), userForm.getUserName(), userForm.getPassword(), userForm.getUserKbn(), userForm.getDeleteFlg()};
@@ -37,7 +37,7 @@ public class userDao {
 	}
 
 	// ユーザー更新
-	public int updateUser(userForm userForm) {
+	public int updateUser(UserForm userForm) {
 
 		String sql = "UPDATE user SET userName=?, password=?, userKbn=? WHERE userId=?";
 		Object[] param = {userForm.getUserName(), userForm.getPassword(), userForm.getUserKbn(), userForm.getUserId()};
@@ -48,7 +48,7 @@ public class userDao {
 	}
 
 	// ユーザー選択(ID検索)
-	public Map<String, Object> selectUser(String userId) {
+	public Map<String, Object> selectUserId(String userId) {
 
 		String sql = "SELECT * FROM user WHERE userId = ? AND deleteFlg != 1";
 		Object[] param = {userId};

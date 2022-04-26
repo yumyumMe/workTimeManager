@@ -6,14 +6,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.workForm;
-import com.example.demo.reposiory.workTimeDao;
+import com.example.demo.model.WorkForm;
+import com.example.demo.reposiory.WorkTimeDao;
 
 @Service
-public class workTimeService {
+public class WorkTimeService {
 
 	@Autowired
-	workTimeDao workTimeDao;
+	WorkTimeDao workTimeDao;
 
 	// 勤務時間表示(指定日)
 	public List<Map<String, Object>> showWorkTime(String day) {
@@ -34,7 +34,7 @@ public class workTimeService {
 	}
 
 	// 勤務時間登録
-	public int registWorkTime(workForm workForm) {
+	public int registWorkTime(WorkForm workForm) {
 
 		int result = workTimeDao.registWorkTime(workForm);
 
@@ -43,7 +43,7 @@ public class workTimeService {
 	}
 
 	// 勤務時間更新
-	public int updateWorkData(workForm workForm) {
+	public int updateWorkData(WorkForm workForm) {
 
 		int result = workTimeDao.updateWorkData(workForm);
 

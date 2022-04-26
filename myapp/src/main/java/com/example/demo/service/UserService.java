@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.model.userForm;
-import com.example.demo.reposiory.userDao;
+import com.example.demo.model.UserForm;
+import com.example.demo.reposiory.UserDao;
 
 @Service
 @Transactional
-public class userService {
+public class UserService {
 
 	@Autowired
-	userDao userDao;
+	UserDao userDao;
 
 	// 全ユーザー取得
 	public List<Map<String, Object>> selectAll() {
@@ -27,29 +27,23 @@ public class userService {
 	}
 
 	// ユーザー登録
-	public int registUser(userForm userForm) {
+	public int registUser(UserForm userForm) {
 
 		// 初期値としてdeleteFlgに0を設定する
-		userForm.setDeleteFlg("0");
+		userForm.setDeleteFlg(0);
 
-		// userIdを発行する
-		String userId = "";
-		if (userForm.getUserKbn().equals("admin")) {
-			userId = "ADM";
-		} else {
-			userId = "USR";
-		}
-
-		// 0～9の乱数5桁を生成
+		/* userIdを発行するため
+		 * 0～9の乱数5桁を生成
+		 */
 		Random rand = new Random();
-		String userIdNum = "";
+		int userIdNum = 0;
 		for (int i = 0; i < 5; i++) {
 			int randNum = rand.nextInt(10);
-			userIdNum = userIdNum + String.valueOf(randNum);
+			userIdNum = randNum;
 		}
 
-		// 3(ユーザー区分)+5(数値)桁のユーザーIDを生成
-		userForm.setUserId(userId + userIdNum);
+		// 5桁のランダム数値をユーザーIDとする
+		userForm.setUserId(String.valueOf(userIdNum));
 
 		int user = userDao.registUser(userForm);
 		return user;
@@ -57,7 +51,7 @@ public class userService {
 	}
 
 	// ユーザー更新
-	public int updateUser(userForm userForm) {
+	public int updateUser(UserForm userForm) {
 
 		int user = userDao.updateUser(userForm);
 		return user;
@@ -65,18 +59,11 @@ public class userService {
 	}
 
 	// ユーザー選択(ID検索)
-	public userForm selectUser(String userId) {
+	public Map<String, Object> selectUser(String userId) {
 
-		Map<String, Object> user = userDao.selectUser(userId);
+		Map<String, Object> user = userDao.selectUserId(userId);
 
-		userForm userForm = new userForm();
-		userForm.setUserId(String.valueOf(user.get("userId")));
-		userForm.setUserName(String.valueOf(user.get("userName")));
-		userForm.setPassword(String.valueOf(user.get("password")));
-		userForm.setUserKbn(String.valueOf(user.get("userKbn")));
-		userForm.setDeleteFlg(String.valueOf(user.get("deleteFlg")));
-
-		return userForm;
+		return user;
 
 	}
 

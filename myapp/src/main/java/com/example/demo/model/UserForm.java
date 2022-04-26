@@ -2,7 +2,7 @@ package com.example.demo.model;
 
 import javax.validation.constraints.NotBlank;
 
-public class userForm {
+public class UserForm {
 
 	public String userId;
 
@@ -14,7 +14,7 @@ public class userForm {
 
 	public String userKbn;
 
-	public String deleteFlg;
+	public int deleteFlg;
 
 	public String getUserId() {
 		return userId;
@@ -48,11 +48,11 @@ public class userForm {
 		this.userKbn = userKbn;
 	}
 
-	public String getDeleteFlg() {
+	public int getDeleteFlg() {
 		return deleteFlg;
 	}
 
-	public void setDeleteFlg(String deleteFlg) {
+	public void setDeleteFlg(int deleteFlg) {
 		this.deleteFlg = deleteFlg;
 	}
 

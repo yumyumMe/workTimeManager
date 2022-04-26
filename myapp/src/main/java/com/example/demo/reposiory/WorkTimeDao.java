@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.model.workForm;
+import com.example.demo.model.WorkForm;
 
 @Repository
-public class workTimeDao {
+public class WorkTimeDao {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
@@ -19,7 +19,7 @@ public class workTimeDao {
 	public List<Map<String, Object>> showWorkTime(String day) {
 
 		String sql = "SELECT workId, startTime, endTime, workKbn, workDetail, other "
-					 + "FROM workTime WHERE registDate = ?"
+					 + "FROM workTime WHERE registDate = ? "
 					 + "ORDER BY startTime";
 		Object[] param = {day};
 		List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, param);
@@ -41,7 +41,7 @@ public class workTimeDao {
 	}
 
 	// 勤務時間登録
-	public int registWorkTime(workForm workForm) {
+	public int registWorkTime(WorkForm workForm) {
 
 		String sql = "INSERT INTO workTime (workId, startTime, endTime, workKbn, workDetail, other, registDate) VALUES(?, ?, ?, ?, ?, ?, ?)";
 		Object[] param = {workForm.getWorkId(), workForm.getStartTime(), workForm.getEndTime(), workForm.getWorkKbn(), workForm.getWorkDetail(), workForm.getOther(), workForm.getRegistDate()};
@@ -52,7 +52,7 @@ public class workTimeDao {
 	}
 
 	// 勤務時間更新
-	public int updateWorkData(workForm workForm) {
+	public int updateWorkData(WorkForm workForm) {
 
 		String sql = "UPDATE workTime SET startTime = ?, endTime = ?, workKbn = ?, workDetail = ?, other = ?, registDate = ? WHERE workId = ?";
 		Object[] param = {workForm.getStartTime(), workForm.getEndTime(), workForm.getWorkKbn(), workForm.getWorkDetail(), workForm.getOther(), workForm.getRegistDate(), workForm.getWorkId()};

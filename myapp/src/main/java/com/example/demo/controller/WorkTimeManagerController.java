@@ -1,7 +1,5 @@
 package com.example.demo.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -20,29 +18,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.model.workForm;
-import com.example.demo.model.workModel;
-import com.example.demo.service.workTimeService;
+import com.example.demo.model.WorkForm;
+import com.example.demo.model.WorkModel;
+import com.example.demo.service.WorkTimeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/work")
-public class workTimeManagerController {
+public class WorkTimeManagerController {
 
 	@Autowired
-	workTimeService workTimeService;
+	WorkTimeService workTimeService;
 
-	workModel workModel = new workModel();
+	WorkModel workModel = new WorkModel();
 
 	// 勤務時間初期表示
 	@GetMapping("/index")
-	public String showTodayWork(Model model, @ModelAttribute workForm workForm) {
+	public String showTodayWork(Model model, @ModelAttribute WorkForm workForm) {
 
-		// 当日日付のレコードのみ取得
-		Calendar cl = Calendar.getInstance();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		String today = format.format(cl.getTime());
+		// 当日日付取得(yyyy-MM-dd形式)
+		String today = workModel.getToday();
 
 		List<Map<String, Object>> list = workTimeService.showWorkTime(today);
 
@@ -84,6 +80,63 @@ public class workTimeManagerController {
 
 	}
 
+	// 勤務時間登録
+	@PostMapping("/register")
+	public String registWorkTime(@Valid @ModelAttribute WorkForm workForm,
+			BindingResult bindingResult, RedirectAttributes attr, Model model) {
+
+		if(bindingResult.hasErrors()) {
+
+			/*
+			 * 勤怠管理画面 初期表示
+			 */
+
+			// 当日日付取得(yyyy-MM-dd形式)
+			String today = workModel.getToday();
+
+			List<Map<String, Object>> list = workTimeService.showWorkTime(today);
+
+			// 作業区分変換
+			for(Map<String, Object> val : list) {
+				int workKbn = (Integer)val.get("workKbn");
+				val.replace("workKbn", workModel.translateWorkKbn(workKbn));
+			}
+
+			model.addAttribute("list", list);
+
+			return "/work/index";
+
+		}
+
+		workTimeService.registWorkTime(workForm);
+
+		return "redirect:/work/index";
+
+
+	}
+
+	// 労働内容更新
+	@PostMapping("/update")
+	@ResponseBody
+	public String updateWorkData(@RequestBody WorkForm workForm) {
+
+		workTimeService.updateWorkData(workForm);
+
+		return "redirect:/work/index";
+
+	}
+
+	// 勤務時間削除
+	@PostMapping("/delete")
+	@ResponseBody
+	public String deleteWorkTime(@RequestBody int workId, RedirectAttributes attr) {
+
+		workTimeService.deleteWorkTime(workId);
+
+		return "redirect:/work/index";
+
+	}
+
 	// 指定日の勤務時間一覧をJSON形式で返却
 	private String getJson(List<Map<String, Object>> list){
 
@@ -121,47 +174,6 @@ public class workTimeManagerController {
 	    }
 
 	    return jsonList;
-
-	}
-
-	// 勤務時間登録
-	@PostMapping("/register")
-	public String registWorkTime(@Valid @ModelAttribute workForm workForm,
-			BindingResult bindingResult, RedirectAttributes attr) {
-
-		if(bindingResult.hasErrors()) {
-
-			return "/work/index";
-
-		}else {
-
-			workTimeService.registWorkTime(workForm);
-
-			return "redirect:/work/index";
-
-		}
-
-	}
-
-	// 労働内容更新
-	@PostMapping("/update")
-	@ResponseBody
-	public String updateWorkData(@RequestBody workForm workForm) {
-
-		workTimeService.updateWorkData(workForm);
-
-		return "redirect:/work/index";
-
-	}
-
-	// 勤務時間削除
-	@PostMapping("/delete")
-	@ResponseBody
-	public String deleteWorkTime(@RequestBody int workId, RedirectAttributes attr) {
-
-		workTimeService.deleteWorkTime(workId);
-
-		return "redirect:/work/index";
 
 	}
 

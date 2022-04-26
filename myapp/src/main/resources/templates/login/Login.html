@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>稼働管理システム</title>
+<!-- Bootstrap Popper -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<!-- JQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+<div class="container-sm" style="width: 400px;">
+	<!-- header start -->
+	<h1 class="navbar-brand">稼働管理システム</h1>
+	<!-- header end -->
+
+	<!-- form start -->
+	<div class="row align-items-center border border-secondary border-2 rounded">
+	<form class="form-signin mb-3" th:action="@{/login}" method="post">
+
+		<div class="col-sm-4 mt-3 mb-3 mx-auto" style="width: 360px;">
+		<label for="inputId" class="sr-only">ログインID</label>
+			<input type="text" id="inputID" class="form-control" placeholder="ID" required autofocus>
+		</div>
+
+		<div class="col-sm-4 mb-3 mx-auto" style="width: 360px;">
+		<label for="inputPassword" class="sr-only">パスワード</label>
+			<input type="password" id="inputPassword" class="form-control" placeholder="パスワード" required>
+		</div>
+
+		<div class="col-sm-4 mx-auto mb-2" style="width: 360px;">
+		<div class="checkbox mb-3">
+			<label>
+				<input type="checkbox" value="remember-me"> パスワードを記憶する
+			</label>
+		</div>
+		</div>
+
+		<div class="col-sm-4 mx-auto" style="width: 360px;">
+		<button class="btn btn-lg btn-primary btn-block" type="submit">ログイン</button>
+		<p class="mt-5 mb-3 text-muted">&copy; 2022</p>
+		</div>
+
+	</form>
+	<!-- form end -->
+	</div>
+</div>
+</body>
+</html>

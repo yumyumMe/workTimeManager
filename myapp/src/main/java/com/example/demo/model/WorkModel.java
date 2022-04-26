@@ -1,6 +1,13 @@
 package com.example.demo.model;
 
-public class workModel {
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+/*
+ * 勤怠登録処理で使用するメソッド一覧
+ */
+
+public class WorkModel {
 
 	// 作業区分変換関数
 	public String translateWorkKbn(int workKbn) {
@@ -57,4 +64,14 @@ public class workModel {
 
 	}
 
+	// 当日日付の取得
+	public String getToday() {
+
+		Calendar cl = Calendar.getInstance();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String today = format.format(cl.getTime());
+
+		return today;
+
+	}
 }

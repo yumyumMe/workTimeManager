@@ -15,18 +15,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.model.userForm;
-import com.example.demo.model.userModel;
-import com.example.demo.service.userService;
+import com.example.demo.model.UserForm;
+import com.example.demo.model.UserModel;
+import com.example.demo.service.UserService;
 
 @Controller
 @RequestMapping("/user")
-public class userController {
+public class UserController {
 
 	@Autowired
-	userService userService;
+	UserService userService;
 
-	userModel userModel = new userModel();
+	UserModel userModel = new UserModel();
 
 	@GetMapping("/list")
 	public String userList(Model model) {
@@ -47,12 +47,12 @@ public class userController {
 
 	@GetMapping("/create")
 	public String userCreate(@RequestParam(name = "userId", defaultValue = "") String userId,
-			@ModelAttribute userForm userForm, Model model) {
+			@ModelAttribute UserForm userForm, Model model) {
 
 		// userIdに値があれば編集モードとして値を設定する
 		if(!userId.isEmpty()) {
-			userForm user = userService.selectUser(userId);
-			model.addAttribute("userForm", user);
+			Map<String, Object> user = userService.selectUser(userId);
+			model.addAttribute("user", user);
 		}
 
 		return "/user/userCreate";
@@ -60,7 +60,7 @@ public class userController {
 	}
 
 	@PostMapping("/create")
-	public String userConfirm(@Validated @ModelAttribute userForm userForm,
+	public String userConfirm(@Validated @ModelAttribute UserForm userForm,
 			BindingResult bindingResult, Model model, RedirectAttributes attr) {
 
 		if(bindingResult.hasErrors()) {

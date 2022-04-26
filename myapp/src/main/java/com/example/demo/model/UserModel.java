@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-public class userModel {
+public class UserModel {
 
 	// ユーザー区分を判定し、表記を変更する
 	public String checkUserKbn(String user) {
